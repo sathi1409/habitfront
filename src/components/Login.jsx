@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Auth.css";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL; // ✅ Uses environment variable
+
 function Login({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,10 +17,12 @@ function Login({ setUser }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
+
       if (res.ok) {
         setUser(data.user);
-        localStorage.setItem("token", data.token); // ✅ Save JWT token
+        localStorage.setItem("token", data.token); // ✅ Save JWT
         alert("Login successful!");
         navigate("/");
       } else {
@@ -33,11 +37,25 @@ function Login({ setUser }) {
     <div className="auth-container">
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Login</button>
       </form>
-      <p>New user? <Link to="/signup">Register here</Link></p>
+      <p>
+        New user? <Link to="/signup">Register here</Link>
+      </p>
     </div>
   );
 }
